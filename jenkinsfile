@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+    stages{
+        stage('Clean reports')
+        {
+            steps{
+                echo '******Cleaning workspace stage started****'
+                //bat 'rmdir /s /q test-reports'
+                echo '******Cleaning workspace stage started****'
+            }    
+        }
+        
+        stage('Checkout git Project'){
+            steps{
+                echo '******downloading the git directory****'
+                git branch: 'main', credentialsId: '64103a13-a015-4ec5-899f-e515bc47a16e', url: 'https://github.com/rajeevranjan123/Flask-Demo.git'
+                echo '****downloading done successfully'
+            }
+        }
+        
+        stage('Test/Run stage'){
+            steps{
+                echo '******Run stage started****'
+                bat 'python hello-world.py'
+                echo '******Run stage Finished****'
+            }
+        }
+        
+        stage('Build Stage'){
+            steps{
+                echo '******Build stage started****'
+                bat 'pip install -r requirements/requirements.txt'
+                bat 'pyinstaller --onefile hello-world.py'
+                echo '******Build Stage finished****'
+            }
+        }
+        
+        stage('Testing Stage'){
+            steps{
+                echo '********* Test Stage Started **********'
+                bat 'python hello-world.py'
+                echo '********* Test Stage Finished **********'       
+            }
+        }
+        
+        stage('Deployment Stage'){
+            steps{
+                echo '********* Generate Artifacts in S3 bucket Stage Started **********'
+                //deploy code started
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'jenkins-s3test', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: 'dist/*.exe', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'jenkins-demo', userMetadata: []
+                //junit '*.xml'
+                echo '********* Generate Artifacts in S3 bucket Stage Started **********'
+                
+                // script{
+                //     if(currentBuild.currentResult=='SUCCESS'){
+                //         echo '********* Uploading to Artifactory is Started **********'
+                //         /*bat 'jfrog rt u "dist/*.exe" generic-local'*/
+                //         bat 'Powershell.exe -executionpolicy remotesigned -File build_script.ps1'
+                //         echo '********* Uploading Finished **********'    
+                //     }
+                // }
+            }
+        }
+    }
+}
