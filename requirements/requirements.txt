@@ -14,4 +14,3 @@ pyparsing==2.4.7
 pytest==6.2.5
 toml==0.10.2
 Werkzeug==2.0.1
-pyinstaller==4.5.1
