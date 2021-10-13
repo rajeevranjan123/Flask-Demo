@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "********************Initialization started*********************"
 # Stop Script on Error
 set -e
 
@@ -16,16 +17,21 @@ apt-get update -y
 echo "****************************************************************"
 echo "Installing python"
 echo "****************************************************************"
-sudo apt install software-properties-common
+sudo apt install -y software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.8
-sudo apt install python3-pip
+sudo apt update -y
+sudo apt install -y python3.8
+sudo apt install -y python3-pip
+echo python3 --version
+
+python3 -m pip install -U numpy --user
+python3 -m pip install -U setuptools --user
+python3 -m pip install -U Flask --user
 
 echo "****************************************************************"
 echo "Installing Nginx"
 echo "****************************************************************"
-sudo apt update
+sudo apt update -y
 sudo apt install -y nginx
 sudo service nginx start
 
@@ -34,6 +40,7 @@ cat << EOF > default
 server {
     listen        3001;
     server_name   *.com;
+    # root /var/www/sample-api;
     location / {
         proxy_pass         http://localhost:5000;
         proxy_http_version 1.1;
@@ -52,18 +59,43 @@ echo 'sites available modified'
 sudo nginx -s reload
 
 echo 'reload successful'
+echo "****************************************************************"
+echo "Installing Nginx compleated"
+echo "****************************************************************"
 
 
 echo "****************************************************************"
-echo '==> Extract api artifact to /var/www/secrets-manager-api'
+echo '==> Extract api artifact to /var/sample-api'
 echo "****************************************************************"
+echo $ARTIFACTS_PATH
 
 mkdir $ARTIFACTS_PATH/drop
-tar -xvf $ARTIFACTS_PATH/sample-api.tar.gz -C $ARTIFACTS_PATH/drop/
-mkdir /var/www/sample-api/
-tar -xvf $ARTIFACTS_PATH/drop/drop/sample-api.tar.gz -C /var/www/sample-api
+tar -xvf $ARTIFACTS_PATH/sample-api-*.tar.gz -C $ARTIFACTS_PATH/drop/
+
+echo $ARTIFACTS_PATH
+echo "*********************artifacts copied to root**********************************"
+mkdir /var/sample-api/
+
+# tar -xvf $ARTIFACTS_PATH/drop/sample-api-* -C /var/sample-api
+
+echo "**********************copy(scp) to certain folder**************"
+# tar -xzvf latest.tar.gz
+rsync -av $ARTIFACTS_PATH/drop/sample-api-* /var/sample-api/
+
+echo "*********************artifacts copied to root**********************************"
 
 echo 'RELEASE_NUMBER='$RELEASE_NUMBER >> /etc/environment
 echo 'API_BUILD_NUMBER='$API_BUILD_NUMBER >> /etc/environment
 echo 'API_PORT='$API_PORT >> /etc/environment
 source /etc/environment
+
+echo "********************Initialization finished*********************"
+
+
+echo '******Start api/script**************************'
+echo python3 --version
+python3 --version
+
+# python3 sample-api.py
+python3 /var/sample-api/sample-api-0.1/src/example/hello-world.py
+echo '******End api/Script ***********************************' 
