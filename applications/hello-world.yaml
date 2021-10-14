@@ -43,7 +43,7 @@ source:
       tag: 18.04
     ami:
       - id: ami-09e67e426f25ce0d7
-        region: us-east-1
+        region: ap-south-1
         username: ubuntu
   os_type: linux
 
