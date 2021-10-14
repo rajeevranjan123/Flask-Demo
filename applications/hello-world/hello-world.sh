@@ -65,22 +65,22 @@ echo "****************************************************************"
 
 
 echo "****************************************************************"
-echo '==> Extract api artifact to /var/sample-api'
+echo '==> Extract api artifact to /var/hello-world'
 echo "****************************************************************"
 echo $ARTIFACTS_PATH
 
 mkdir $ARTIFACTS_PATH/drop
-tar -xvf $ARTIFACTS_PATH/sample-api-*.tar.gz -C $ARTIFACTS_PATH/drop/
+tar -xvf $ARTIFACTS_PATH/hello-world-*.tar.gz -C $ARTIFACTS_PATH/drop/
 
 echo $ARTIFACTS_PATH
 echo "*********************artifacts copied to root**********************************"
-mkdir /var/sample-api/
+mkdir /var/hello-world/
 
-# tar -xvf $ARTIFACTS_PATH/drop/sample-api-* -C /var/sample-api
+# tar -xvf $ARTIFACTS_PATH/drop/sample-api-* -C /var/hello-world
 
 echo "**********************copy(scp) to certain folder**************"
-# tar -xzvf latest.tar.gz
-rsync -av $ARTIFACTS_PATH/drop/sample-api-* /var/sample-api/
+
+rsync -av $ARTIFACTS_PATH/drop/hello-world-* /var/hello-world/
 
 echo "*********************artifacts copied to root**********************************"
 
@@ -96,6 +96,6 @@ echo '******Start api/script**************************'
 echo python3 --version
 python3 --version
 
-# python3 sample-api.py
-python3 /var/sample-api/sample-api-0.1/src/example/hello-world.py
+# python3 hello-world.py
+python3 /var/hello-world/hello-world-0/src/hello-world.py
 echo '******End api/Script ***********************************' 
