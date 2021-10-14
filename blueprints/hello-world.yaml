@@ -5,10 +5,10 @@ metadata:
     hello-world deployment blueprint
     
 clouds: 
-  - AWS: us-east-1
+  - AWS: ap-south-1
   
 artifacts:
-  - hello-world: sample/hello-world.exe
+  - hello-world: artifacts/hello-world/hello-world-0.1.tar.gz
 
 inputs:
 - PORT: 3000
