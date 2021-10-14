@@ -8,7 +8,7 @@ clouds:
   - AWS: ap-south-1
   
 artifacts:
-  - hello-world: artifacts/hello-world/hello-world-0.1.tar.gz
+  - hello-world: artifacts/hello-world/hello-world-0.tar.gz
 
 inputs:
 - PORT: 3000
