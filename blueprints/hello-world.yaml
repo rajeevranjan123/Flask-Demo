@@ -18,7 +18,7 @@ inputs:
 - API_BUILD_NUMBER: none
 
 applications:    
-  - hello-world:      
+  - hello-world: 
       # target: vm1
       instances: 1 
       input_values:
